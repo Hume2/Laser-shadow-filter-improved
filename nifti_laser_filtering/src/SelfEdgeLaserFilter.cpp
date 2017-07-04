@@ -40,7 +40,7 @@ namespace nifti_laser_filtering {
               continue;
             }
 
-            if (r2 < max_edge_dist) { //edge too close
+            if (r2 > max_edge_dist) { //edge too far
               continue;
             }
 
