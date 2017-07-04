@@ -24,7 +24,7 @@
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
 #include <dynamic_reconfigure/Config.h>
-#include <stamped_msgs/Float32.h>
+//#include <stamped_msgs/Float32.h>
 #include <geometry_msgs/PointStamped.h>
 #include <visualization_msgs/MarkerArray.h>
 
@@ -299,7 +299,7 @@ namespace robot_self_filter {
         sensor_msgs::PointCloud2Ptr bbox_crop_output;
 
         //! Prepared message instance
-        stamped_msgs::Float32 robotRadius;
+        geometry_msgs::PointStamped robotRadius;
         //! Prepared message instance
         geometry_msgs::PointStamped robotCenter;
         //! Prepared message instance

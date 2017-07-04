@@ -12,7 +12,7 @@ set(THIS_PACKAGE_ROS_DEPS
     pluginlib
     roscpp
     sensor_msgs
-    stamped_msgs
+#	stamped_msgs
     tf
     tf_conversions
     urdf

@@ -145,7 +145,7 @@ namespace robot_self_filter {
                 "dynamic_robot_model_server/parameter_updates", 10, &RobotSelfFilter::robotDescriptionUpdated, this);
 
         if (this->compute_bounding_sphere) {
-            robot_radius_publisher = this->nodeHandle.advertise<stamped_msgs::Float32>("robot_radius", 100);
+            robot_radius_publisher = this->nodeHandle.advertise<geometry_msgs::PointStamped>("robot_radius", 100);
             robot_center_publisher = this->nodeHandle.advertise<geometry_msgs::PointStamped>("robot_center", 100);
         }
 
@@ -279,7 +279,7 @@ namespace robot_self_filter {
                     
                     robotRadius.header.stamp = scan_time;
                     robotRadius.header.frame_id = robot_frame;
-                    robotRadius.data = bound.radius;
+                    robotRadius.point.x = bound.radius;
                     robot_radius_publisher.publish(robotRadius);
                     
                     robotCenter.header.stamp = scan_time;
@@ -516,7 +516,7 @@ namespace robot_self_filter {
 
                 // add the collision shape to robot_shape_mask; the inflation parameters come into play here
                 point_containment_filter::ShapeHandle shape_handle =
-                        robot_shape_mask->addShape(boost::shared_ptr<shapes::Shape const>(collision_shape),
+                        robot_shape_mask->addShape(std::shared_ptr<const shapes::Shape>(collision_shape),
                                 inflation_scale, inflation_padding);
                 shapes_to_links[shape_handle] = CollisionBodyWithLink(collision, link, collision_index, shape_extents);
 

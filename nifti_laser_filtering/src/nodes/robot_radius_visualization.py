@@ -4,7 +4,7 @@ import message_filters
 import rospy
 
 from geometry_msgs.msg import PointStamped, PolygonStamped
-from stamped_msgs.msg import Float32
+"""from stamped_msgs.msg import Float32"""
 from visualization_msgs.msg import Marker
 
 class RobotRadiusVisualization(object):
@@ -14,7 +14,7 @@ class RobotRadiusVisualization(object):
 
     def __init__(self):
 
-        sub_radius = message_filters.Subscriber("robot_radius", Float32)
+		sub_radius = message_filters.Subscriber("robot_radius", PointStamped)
         sub_center = message_filters.Subscriber("robot_center", PointStamped)
         self.sub_aabb = rospy.Subscriber("robot_bounding_box", PolygonStamped, self.aabb_callback, queue_size=10)
 
