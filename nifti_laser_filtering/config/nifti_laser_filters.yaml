@@ -24,3 +24,7 @@ nifti_laser_filtering:
             compute_bounding_sphere: True
             compute_bounding_box: True
             compute_debug_bounding_box: False
+
+    -   name: SelfEdgeLaserFilter
+        type: nifti_laser_filtering/SelfEdgeLaserFilter
+
