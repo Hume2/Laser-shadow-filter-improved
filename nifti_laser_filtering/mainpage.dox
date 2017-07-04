@@ -1,0 +1,23 @@
+/**
+\mainpage
+\htmlinclude manifest.html
+
+\b nifti_laser_filtering filters the data from laser scans in order to:
+- correct for time shift between laser and position data,
+- correct the distortion observed for really close ranges,
+- filter shadow points (as much as possible),
+- remove points belonging to the robot itself.
+
+\b nifti_laser_filtering subscribes to \c /scan and publishes \c /scan_filtered.
+
+The \c nifti_laser_filtering node takes a single parameter and is further configured in config/nifti_laser_filters.yaml:
+- \a ~time_offset (\c 0.0 s): time offset to correct the time stamps of the scans,
+- \a nifti_laser_filtering/scan_filter_chain/RobotSelfFilter/params:
+-- \a robot_frame (\c /base_link): the \c /tf frame of the robot,
+-- \a min_distance (\c 0.0 m): minimum distance to cut the laser values,
+-- \a inflation_scale (\c 1.0): A scale that is applied to the collision model for the purposes of collision checking.
+-- \a inflation_padding (\c 0.0 m): Padding to be added to the collision model for the purposes of collision checking.
+- \a nifti_laser_filtering/scan_filter_chain/TradrLaserShadowFilter/params:
+-- \a shadow_filter_min_angle (\c 0.14 rad): minimum incidence angle to keep points.
+
+*/

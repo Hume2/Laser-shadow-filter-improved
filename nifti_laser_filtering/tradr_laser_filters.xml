@@ -1,0 +1,25 @@
+<class_libraries>
+    <library path="lib/libtradr_laser_filters">
+        <class name="nifti_laser_filtering/TradrLaserShadowFilter"
+               type="nifti_laser_filtering::TradrLaserShadowFilter"
+               base_class_type="filters::FilterBase<sensor_msgs::LaserScan>">
+            <description>
+                Laser scan shadow filtering for TRADR robot.
+            </description>
+        </class>
+        <class name="robot_self_filter/RobotSelfFilter"
+               type="robot_self_filter::RobotSelfFilter"
+               base_class_type="filters::FilterBase<sensor_msgs::LaserScan>">
+            <description>
+                Filter for removing robot body from laser scans.
+            </description>
+        </class>
+        <class name="nifti_laser_filtering/NearFilter"
+               type="nifti_laser_filtering::NearFilter"
+               base_class_type="filters::FilterBase<sensor_msgs::LaserScan>">
+            <description>
+                A filter which applies an undistortion transform to points closer than 40 cm.
+            </description>
+        </class>
+    </library>
+</class_libraries>

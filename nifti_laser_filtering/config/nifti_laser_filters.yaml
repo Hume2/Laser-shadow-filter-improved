@@ -1,0 +1,26 @@
+nifti_laser_filtering:
+    scan_filter_chain:
+
+    -   name: NearFilter
+        type: nifti_laser_filtering/NearFilter
+
+    -   name: TradrLaserShadowFilter
+        type: nifti_laser_filtering/TradrLaserShadowFilter
+        params:
+            min_angle_close: 0.10  # radians
+            min_angle_far: 0.10  # radians
+            far_distance_threshold: 0.7  # meters
+
+    -   name: RobotSelfFilter
+        type: robot_self_filter/RobotSelfFilter
+        params:
+            robot_frame: 'base_link'
+            min_distance: 0.0
+            max_distance: 2.0
+            inflation_scale: 1.15
+            inflation_padding: 0.01
+            robot_description_param: '/nifti_robot_description'
+            wait_for_transform: 0.5
+            compute_bounding_sphere: True
+            compute_bounding_box: True
+            compute_debug_bounding_box: False

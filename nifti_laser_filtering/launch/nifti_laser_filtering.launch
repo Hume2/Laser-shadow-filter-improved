@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+    
+    <!-- This launch file needs robot.yaml to be loaded by nifti_robot_description/load_robot_model.launch. This is done e.g. from robot_node.launch or play_ugv_min.launch. -->
+	<rosparam command="load" file="$(find nifti_laser_filtering)/config/nifti_laser_filters.yaml"/>
+
+	<node type="nifti_laser_filtering" pkg="nifti_laser_filtering"
+			name="nifti_laser_filtering" output="screen">
+		<param name="time_offset" value="-0.01" /> <!-- -0.025-->
+ 	</node>
+</launch>

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<package>
+  <name>nifti_laser_filtering</name>
+  <version>2.1.0</version>
+  <description>The laser filtering tools for TRADR project</description>
+
+  <maintainer email="peckama2@ciirc.cvut.cz">Martin Pecka</maintainer>
+  <maintainer email="renaud.dube@mavt.ethz.ch">Renaud Dubé</maintainer>
+  <maintainer email="abel.gawel@mavt.ethz.ch">Abel Gawel</maintainer>
+
+  <license>BSD</license>
+
+  <author email="francis.colas@mavt.ethz.ch">Francis Colas</author>
+  <author email="martin.pecka@cvut.cz">Martin Pecka</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>assimp-dev</build_depend>
+  <build_depend>filters</build_depend>
+  <build_depend>geometric_shapes</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>laser_geometry</build_depend>
+  <build_depend>libpcl-all-dev</build_depend>
+  <build_depend>message_filters</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>moveit_ros_perception</build_depend>
+  <build_depend>nifti_robot_description</build_depend>
+  <build_depend>pluginlib</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>stamped_msgs</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>tf_conversions</build_depend>
+  <build_depend>tf2_sensor_msgs</build_depend>
+  <build_depend>urdf</build_depend>
+  <build_depend>visualization_msgs</build_depend>
+
+  <run_depend>assimp</run_depend>
+  <run_depend>filters</run_depend>
+  <run_depend>geometric_shapes</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>laser_geometry</run_depend>
+  <run_depend>libpcl-all</run_depend>
+  <run_depend>message_filters</run_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>moveit_ros_perception</run_depend>
+  <run_depend>nifti_robot_description</run_depend>
+  <run_depend>pluginlib</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>stamped_msgs</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>tf_conversions</run_depend>
+  <run_depend>urdf</run_depend>
+  <run_depend>visualization_msgs</run_depend>
+
+  <export>
+    <filters plugin="${prefix}/tradr_laser_filters.xml"/>
+  </export>
+</package>
