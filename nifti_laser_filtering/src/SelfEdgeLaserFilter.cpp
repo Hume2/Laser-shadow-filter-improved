@@ -18,7 +18,7 @@ namespace nifti_laser_filtering {
         const float max_edge_dist = 0.5;
         const float cos_min = -0.98;
         const float cos_max = 0.10;
-        const float delta_treshold = 0.05;
+        const float delta_treshold = 0.01;
 
         const float cos_gamma = cos(input_scan.angle_increment);
         const float cos_2gamma = cos(2 * input_scan.angle_increment);
@@ -28,7 +28,7 @@ namespace nifti_laser_filtering {
         int sgn;
 
         filtered_scan = input_scan;
-        for (unsigned int i = 0; i < input_scan.ranges.size(); i++) {
+        for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
             r1 = r2;
             r2 = r3;
             r3 = filtered_scan.ranges[i];
@@ -55,27 +55,28 @@ namespace nifti_laser_filtering {
             cos_edge = (a3 - a1 - a2) / (2 * sqrt(a1*a2));
 
             if ((cos_edge < cos_max) || (cos_edge > cos_min)) {
+              int j = i;
               //Let's remove the trail.
               ra = r2;
               if (a1 < a3) { //decide which way the trail continues
                 sgn = -1;
-                i -= 2;
+                j -= 2;
               } else {
                 sgn = 1;
               }
 
-              while (i >= 0 && i < input_scan.ranges.size()) {
+              while (j >= 0 && j < filtered_scan.ranges.size()) {
                 rb = ra;
-                ra = filtered_scan.ranges[i];
+                ra = filtered_scan.ranges[j];
                 dr2 = rb - ra;
                 if (fabs(dr2) < delta_treshold) {
                   dr = dr2;
-                  filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
+                  filtered_scan.ranges[j] = std::numeric_limits<float>::quiet_NaN();
                   num_filtered_points += 1;
                 } else {
                   break;
                 }
-                i += sgn;
+                j += sgn;
               }
               //filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
               //num_filtered_points += 1;
