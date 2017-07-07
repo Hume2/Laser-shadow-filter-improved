@@ -112,6 +112,34 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
 
   return true;
 }
+
+/*
+ *                            _S
+ *                         _-"//
+ *                      _-" g/g|
+ *                   _-"    / /
+ *             r1 _-"      /  |
+ *             _-"        /  /
+ *          _-"        r2/   |
+ *       _-"            /   /
+ *    _-"              /    |
+ * _-"     a1         /    /r3
+ * ------------------+     |
+ *  \             | ?|    /
+ *   "\            \_|    |
+ *     "\            |   /
+ *       "\          |a2 |
+ *         "\a3      |  /
+ *           "\      |  |
+ *             "\    | /
+ *               "\  | |
+ *                 "\|/
+ *
+ * If the angle marked '?' is in given bounds, the trail is detected.
+ * After that it goes along the trail and removes the point while the
+ * points are along the detected trail.
+ */
+
 }
 
 PLUGINLIB_EXPORT_CLASS(nifti_laser_filtering::SelfEdgeLaserFilter, filters::FilterBase<sensor_msgs::LaserScan>);

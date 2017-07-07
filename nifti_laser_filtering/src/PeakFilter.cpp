@@ -74,6 +74,48 @@ bool PeakFilter::update(const sensor_msgs::LaserScan& input_scan, sensor_msgs::L
 
   return true;
 }
+
+/*              S
+ *             /|\
+ *            /g|g\
+ *           /  |  \
+ *          /   |   \
+ *       r1/  r2|    \r3
+ *        /     |     \
+ *       /      0      \
+ *      /     _/ \_     \
+ *     /    _/\ ? /\_    \
+ *    /   _/   "-"   \_   \
+ *   /  _/ a1       a2 \_  \
+ *  / _/        |        \_ \
+ * /_/__________1__________\_\
+ *             a3
+ *
+ *              S
+ *             /|\
+ *            /g|g\
+ *           /  |  \
+ *          /   |   \
+ *       r1/  r2|    \r3
+ *        /     |     \
+ *       /      |      \
+ *      /       |       \
+ *     /        |        \
+ *    /         |         \
+ *   /          |          \
+ *  /           |           \
+ * /____________1____________\
+ * \_           |   a3      _/
+ *   \_         |         _/
+ *     \_       |       _/
+ *    a1 \_    ___    _/ a2
+ *         \__/   \__/
+ *           \_ ? _/
+ *             \_/
+ *              0
+ *
+ * When the angle marked as '?' is too sharp, it's assumed to be a peak.
+ * After that it moves the point marked '0' to point marked '1'.*/
 }
 
 PLUGINLIB_EXPORT_CLASS(nifti_laser_filtering::PeakFilter, filters::FilterBase<sensor_msgs::LaserScan>);
