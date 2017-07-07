@@ -6,31 +6,31 @@
 
 namespace nifti_laser_filtering {
 
-    /**
+/**
      */
-    class SelfEdgeLaserFilter : public filters::FilterBase<sensor_msgs::LaserScan> {
-      public:
-        virtual ~SelfEdgeLaserFilter();
+class SelfEdgeLaserFilter : public filters::FilterBase<sensor_msgs::LaserScan> {
+  public:
+    virtual ~SelfEdgeLaserFilter();
 
-        //! Read config parameters loaded by FilterBase::configure(string, NodeHandle)
-        bool configure();
+    //! Read config parameters loaded by FilterBase::configure(string, NodeHandle)
+    bool configure();
 
-        //! Apply the filter.
-        bool update(const sensor_msgs::LaserScan& input_scan, sensor_msgs::LaserScan& filtered_scan);
+    //! Apply the filter.
+    bool update(const sensor_msgs::LaserScan& input_scan, sensor_msgs::LaserScan& filtered_scan);
 
-      protected:
-        //!
-        double max_edge_dist;
+  protected:
+    //! The maximum distance of robot's edge
+    double max_edge_dist;
 
-        //!
-        double cos_min;
+    //! The cosine of maximum angle at the trail's start
+    double cos_min;
 
-        //!
-        double cos_max;
+    //! The cosine of minimum angle at the trail's start
+    double cos_max;
 
-        //!
-        double delta_threshold;
-    };
+    //! The maximum distance of filtered points from the trail's line
+    double delta_threshold;
+};
 
 }
 
