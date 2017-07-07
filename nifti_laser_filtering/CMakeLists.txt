@@ -74,7 +74,8 @@ include_directories(
 
 add_library(tradr_laser_filters
     src/TradrLaserShadowFilter.cpp
-    src/NearFilter.cpp
+	src/PeakFilter.cpp
+	src/NearFilter.cpp
 	src/SelfEdgeLaserFilter.cpp
 	src/RobotSelfFilter.cpp)
 target_link_libraries(tradr_laser_filters ${catkin_LIBRARIES} ${PCL_LIBRARIES} assimp)

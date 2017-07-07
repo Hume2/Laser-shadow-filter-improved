@@ -1,6 +1,12 @@
 nifti_laser_filtering:
     scan_filter_chain:
 
+    -   name: PeakFilter
+        type: nifti_laser_filtering/PeakFilter
+        params:
+            max_filter_angle: 0.524  # radians
+            passes: 3 
+
     -   name: NearFilter
         type: nifti_laser_filtering/NearFilter
 
@@ -17,5 +23,4 @@ nifti_laser_filtering:
             max_edge_distance: 0.5  # meters
             min_filter_angle: 1.466  # radians
             max_filter_angle: 2.932  # radians
-            delta_threshold: 0.01  # meters
-
+            delta_threshold: 0.05  # meters

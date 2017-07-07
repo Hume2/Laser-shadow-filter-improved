@@ -7,11 +7,18 @@
                 Laser scan shadow filtering for TRADR robot.
             </description>
         </class>
+        <class name="nifti_laser_filtering/PeakFilter"
+               type="nifti_laser_filtering::PeakFilter"
+               base_class_type="filters::FilterBase<sensor_msgs::LaserScan>">
+            <description>
+                Filter for removing sharp peaks from the laser scans.
+            </description>
+        </class>
         <class name="nifti_laser_filtering/SelfEdgeLaserFilter"
                type="nifti_laser_filtering::SelfEdgeLaserFilter"
                base_class_type="filters::FilterBase<sensor_msgs::LaserScan>">
             <description>
-                Filter for removing robot body from laser scans.
+                Filter for removing robot's shadow from laser scans.
             </description>
         </class>
         <class name="robot_self_filter/RobotSelfFilter"

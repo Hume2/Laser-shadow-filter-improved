@@ -47,15 +47,10 @@ namespace nifti_laser_filtering {
     }
 
     bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, sensor_msgs::LaserScan &filtered_scan) {
-        /*const float max_edge_dist = 0.5;
-        const float cos_min = -0.98;
-        const float cos_max = 0.10;
-        const float delta_threshold = 0.01;*/
+        const double cos_gamma = cos(input_scan.angle_increment);
+        const double cos_2gamma = cos(2 * input_scan.angle_increment);
 
-        const float cos_gamma = cos(input_scan.angle_increment);
-        const float cos_2gamma = cos(2 * input_scan.angle_increment);
-
-        float a1, a2, a3, r1, r2, r3, ra, rb, dr, dr2, cos_edge;
+        double a1, a2, a3, r1, r2, r3, ra, rb, dr, dr2, cos_edge;
         int num_filtered_points = 0;
         int sgn;
 
@@ -82,7 +77,7 @@ namespace nifti_laser_filtering {
 
             a1 = r1*r1 + r2*r2 - 2*r1*r2*cos_gamma;
             a2 = r2*r2 + r3*r3 - 2*r1*r2*cos_gamma;
-            a3 = r1*r1 + r3*r3 - 2*r1*r2*cos_gamma;
+            a3 = r1*r1 + r3*r3 - 2*r1*r2*cos_2gamma;
 
             cos_edge = (a3 - a1 - a2) / (2 * sqrt(a1*a2));
 
