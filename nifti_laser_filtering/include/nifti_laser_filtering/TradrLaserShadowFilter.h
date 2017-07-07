@@ -36,6 +36,12 @@ namespace nifti_laser_filtering {
         double tan_shadow_filter_min_angle_far;
         //! Distance (in meters) from which the points should be considered far.
         double far_distance_threshold;
+
+        //!
+        void proccess_point(int i, float r0, float r1,
+                            const sensor_msgs::LaserScan& input_scan,
+                            sensor_msgs::LaserScan& filtered_scan,
+                            unsigned int& num_filtered_points);
     };
 }
 

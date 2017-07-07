@@ -37,12 +37,39 @@ namespace nifti_laser_filtering {
         return true;
     }
 
-    bool TradrLaserShadowFilter::update(const sensor_msgs::LaserScan &input_scan, sensor_msgs::LaserScan &filtered_scan) {
+    void TradrLaserShadowFilter::proccess_point(int i, float r0, float r1,
+                                                const sensor_msgs::LaserScan& input_scan,
+                                                sensor_msgs::LaserScan& filtered_scan,
+                                                unsigned int& num_filtered_points) {
         const float sin_gamma = sin(input_scan.angle_increment);
         const float cos_gamma = cos(input_scan.angle_increment);
-        float x, y, r0, r1;
+        float x, y;
         const float r_min = input_scan.range_min;
         const float r_max = input_scan.range_max;
+
+        if ((r1 >= r_min) && (r1 <= r_max)) {
+            x = r0 * sin_gamma;
+            y = fabs(r1 - r0 * cos_gamma);
+
+            // the min_angle_close is used for points that are close to the robot and to its left/right (not in front of it).
+            const double min_angle = ((i < 120 || i > 420) && r1 <= this->far_distance_threshold) ?
+                                     this->tan_shadow_filter_min_angle_close :
+                                     this->tan_shadow_filter_min_angle_far;
+            if (y > x * min_angle) {
+                filtered_scan.ranges[i - 1] = std::numeric_limits<float>::quiet_NaN();
+                filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
+                num_filtered_points += 1;
+            }
+            //r0 = r1;
+        }
+    }
+
+    bool TradrLaserShadowFilter::update(const sensor_msgs::LaserScan &input_scan, sensor_msgs::LaserScan &filtered_scan) {
+        //const float sin_gamma = sin(input_scan.angle_increment);
+        //const float cos_gamma = cos(input_scan.angle_increment);
+        float r0, r1;
+        //const float r_min = input_scan.range_min;
+        //const float r_max = input_scan.range_max;
 
         unsigned int num_filtered_points = 0;
 
@@ -52,22 +79,15 @@ namespace nifti_laser_filtering {
         r0 = input_scan.ranges[0];
         for (unsigned int i = 1; i < input_scan.ranges.size(); i++) {
             r1 = input_scan.ranges[i];
+            proccess_point(i, r0, r1, input_scan, filtered_scan, num_filtered_points);
+            r0 = r1;
+        }
 
-            if ((r1 >= r_min) && (r1 <= r_max)) {
-                x = r0 * sin_gamma;
-                y = fabs(r1 - r0 * cos_gamma);
-
-                // the min_angle_close is used for points that are close to the robot and to its left/right (not in front of it).
-                const double min_angle = ((i < 120 || i > 420) && r1 <= this->far_distance_threshold) ?
-                                         this->tan_shadow_filter_min_angle_close :
-                                         this->tan_shadow_filter_min_angle_far;
-                if (y > x * min_angle) {
-                    filtered_scan.ranges[i - 1] = std::numeric_limits<float>::quiet_NaN();
-                    filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
-                    num_filtered_points += 1;
-                }
-                r0 = r1;
-            }
+        r0 = input_scan.ranges[input_scan.ranges.size() - 1];
+        for (unsigned int i = input_scan.ranges.size() - 2; i >= 1; i--) {
+            r1 = input_scan.ranges[i];
+            proccess_point(i, r0, r1, input_scan, filtered_scan, num_filtered_points);
+            r0 = r1;
         }
 
 	ROS_DEBUG("Shadow filtering removed %u points.", num_filtered_points);
