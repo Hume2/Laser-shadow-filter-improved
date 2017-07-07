@@ -10,7 +10,7 @@ namespace nifti_laser_filtering {
     }
 
     bool SelfEdgeLaserFilter::configure() {
-        ROS_INFO("NearFilter: Successfully configured.");
+        ROS_INFO("SelfEdgeLaserFilter: Successfully configured.");
         return true;
     }
 
