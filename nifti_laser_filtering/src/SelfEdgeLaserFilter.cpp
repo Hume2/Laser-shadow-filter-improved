@@ -10,15 +10,47 @@ namespace nifti_laser_filtering {
     }
 
     bool SelfEdgeLaserFilter::configure() {
+      if (!filters::FilterBase<sensor_msgs::LaserScan>::getParam("max_edge_distance", max_edge_dist)) {
+          ROS_WARN("SelfEdgeLaserFilter was not given max_edge_distance, assuming 0.5 meters.");
+          max_edge_dist = 0.5;
+      } else {
+          ROS_DEBUG("SelfEdgeLaserFilter: found param max_edge_distance: %.5f meters", max_edge_dist);
+      }
+
+      double min_filter_angle;
+      if (!filters::FilterBase<sensor_msgs::LaserScan>::getParam("min_filter_angle", min_filter_angle)) {
+          ROS_WARN("SelfEdgeLaserFilter was not given min_filter_angle, assuming 1.466 rad.");
+          min_filter_angle = 1.466;
+      } else {
+          ROS_DEBUG("SelfEdgeLaserFilter: found param min_filter_angle: %.5f rad", min_filter_angle);
+      }
+      cos_max = cos(min_filter_angle);
+
+      double max_filter_angle;
+      if (!filters::FilterBase<sensor_msgs::LaserScan>::getParam("max_filter_angle", max_filter_angle)) {
+          ROS_WARN("SelfEdgeLaserFilter was not given max_filter_angle, assuming 2.932 rad.");
+          max_filter_angle = 2.932;
+      } else {
+          ROS_DEBUG("SelfEdgeLaserFilter: found param max_filter_angle: %.5f rad", max_filter_angle);
+      }
+      cos_min = cos(max_filter_angle);
+
+      if (!filters::FilterBase<sensor_msgs::LaserScan>::getParam("delta_threshold", delta_threshold)) {
+          ROS_WARN("SelfEdgeLaserFilter was not given delta_threshold, assuming 0.01 meters.");
+          delta_threshold = 0.01;
+      } else {
+          ROS_DEBUG("SelfEdgeLaserFilter: found param delta_threshold: %.5f rad", delta_threshold);
+      }
+
         ROS_INFO("SelfEdgeLaserFilter: Successfully configured.");
         return true;
     }
 
     bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, sensor_msgs::LaserScan &filtered_scan) {
-        const float max_edge_dist = 0.5;
+        /*const float max_edge_dist = 0.5;
         const float cos_min = -0.98;
         const float cos_max = 0.10;
-        const float delta_treshold = 0.01;
+        const float delta_threshold = 0.01;*/
 
         const float cos_gamma = cos(input_scan.angle_increment);
         const float cos_2gamma = cos(2 * input_scan.angle_increment);
@@ -69,7 +101,7 @@ namespace nifti_laser_filtering {
                 rb = ra;
                 ra = filtered_scan.ranges[j];
                 dr2 = rb - ra;
-                if (fabs(dr2) < delta_treshold) {
+                if (fabs(dr2) < delta_threshold) {
                   dr = dr2;
                   filtered_scan.ranges[j] = std::numeric_limits<float>::quiet_NaN();
                   num_filtered_points += 1;

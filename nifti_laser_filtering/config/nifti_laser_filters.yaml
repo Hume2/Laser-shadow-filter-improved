@@ -13,4 +13,9 @@ nifti_laser_filtering:
 
     -   name: SelfEdgeLaserFilter
         type: nifti_laser_filtering/SelfEdgeLaserFilter
+        params:
+            max_edge_distance: 0.5  # meters
+            min_filter_angle: 1.466  # radians
+            max_filter_angle: 2.932  # radians
+            delta_threshold: 0.01  # meters
 

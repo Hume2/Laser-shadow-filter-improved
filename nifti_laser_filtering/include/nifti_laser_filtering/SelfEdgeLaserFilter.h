@@ -9,7 +9,7 @@ namespace nifti_laser_filtering {
     /**
      */
     class SelfEdgeLaserFilter : public filters::FilterBase<sensor_msgs::LaserScan> {
-    public:
+      public:
         virtual ~SelfEdgeLaserFilter();
 
         //! Read config parameters loaded by FilterBase::configure(string, NodeHandle)
@@ -17,6 +17,19 @@ namespace nifti_laser_filtering {
 
         //! Apply the filter.
         bool update(const sensor_msgs::LaserScan& input_scan, sensor_msgs::LaserScan& filtered_scan);
+
+      protected:
+        //!
+        double max_edge_dist;
+
+        //!
+        double cos_min;
+
+        //!
+        double cos_max;
+
+        //!
+        double delta_threshold;
     };
 
 }
