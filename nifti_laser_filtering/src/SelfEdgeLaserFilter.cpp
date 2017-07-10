@@ -98,7 +98,8 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
       if (buffer[i].c >= 0) {
         if (fabs(buffer[i].dr2 - dr) < delta_threshold) {
           buffer[i].dr2 = dr;
-          buffer[i].c++;
+        } else {
+          buffer[i].c--;
         }
         filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
         num_filtered_points += 1;
@@ -112,17 +113,25 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
       continue;
     }
 
+    if (r2 > r1 || r2 > r3) { //edge not convex
+      continue;
+    }
+
     a1 = r1*r1 + r2*r2 - 2*r1*r2*cos_gamma;
     a2 = r2*r2 + r3*r3 - 2*r2*r3*cos_gamma;
     a3 = r1*r1 + r3*r3 - 2*r1*r3*cos_2gamma;
 
     cos_edge = (a3 - a1 - a2) / (2 * sqrt(a1*a2));
 
+    if (r1 > r3) { //We have already missed the edge.
+      continue;
+    }
+
     if ((cos_edge < cos_max) || (cos_edge > cos_min)) {
       filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
       num_filtered_points += 1;
       buffer[i].dr2 = r3 - r2;
-      buffer[i].c = -1;
+      buffer[i].c = 3;
     }
   }
 
@@ -169,7 +178,7 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
       int c = after_trail_points;
       //Let's remove the trail.
       ra = r2;
-      if (a1 < a3) { //decide which way the trail continues
+      if (r1 > r3) { //decide which way the trail continues
         sgn = -1;
         j -= 2;
       } else {
