@@ -84,8 +84,8 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
     }
 
     a1 = r1*r1 + r2*r2 - 2*r1*r2*cos_gamma;
-    a2 = r2*r2 + r3*r3 - 2*r1*r2*cos_gamma;
-    a3 = r1*r1 + r3*r3 - 2*r1*r2*cos_2gamma;
+    a2 = r2*r2 + r3*r3 - 2*r2*r3*cos_gamma;
+    a3 = r1*r1 + r3*r3 - 2*r1*r3*cos_2gamma;
 
     cos_edge = (a3 - a1 - a2) / (2 * sqrt(a1*a2));
 
