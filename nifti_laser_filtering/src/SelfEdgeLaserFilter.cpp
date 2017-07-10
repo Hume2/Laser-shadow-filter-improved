@@ -91,6 +91,7 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
 
     if ((cos_edge < cos_max) || (cos_edge > cos_min)) {
       int j = i;
+      int c = 1;
       //Let's remove the trail.
       ra = r2;
       if (a1 < a3) { //decide which way the trail continues
@@ -100,17 +101,18 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
         sgn = 1;
       }
 
-      while (j >= 0 && j < filtered_scan.ranges.size()) {
+      while (j >= 0 && j < filtered_scan.ranges.size() && c >= 0) {
         rb = ra;
         ra = filtered_scan.ranges[j];
         dr2 = rb - ra;
-        if (fabs(dr2) < delta_threshold) {
+        if (fabs(dr2 - dr) < delta_threshold) {
           dr = dr2;
-          filtered_scan.ranges[j] = std::numeric_limits<float>::quiet_NaN();
-          num_filtered_points += 1;
-        } else {
-          break;
+          c++;
         }
+
+        filtered_scan.ranges[j] = std::numeric_limits<float>::quiet_NaN();
+        num_filtered_points += 1;
+
         j += sgn;
       }
     }

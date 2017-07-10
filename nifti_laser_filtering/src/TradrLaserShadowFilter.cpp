@@ -90,7 +90,7 @@ namespace nifti_laser_filtering {
             r0 = r1;
         }
 
-	ROS_DEBUG("Shadow filtering removed %u points.", num_filtered_points);
+       ROS_DEBUG("Shadow filtering removed %u points.", num_filtered_points);
 
         /*
          * a (alpha) is the angle of interest
