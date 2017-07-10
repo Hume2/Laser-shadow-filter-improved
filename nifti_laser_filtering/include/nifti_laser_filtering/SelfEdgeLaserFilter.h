@@ -6,8 +6,16 @@
 
 namespace nifti_laser_filtering {
 
+struct LaserData {
+    double r1, r2, dr2;
+    int c;
+};
+
 /**
-     */
+ * \brief filter to remove the shadows of robot's own body
+ *
+ * \author Leonard Mentzl
+ */
 class SelfEdgeLaserFilter : public filters::FilterBase<sensor_msgs::LaserScan> {
   public:
     virtual ~SelfEdgeLaserFilter();
@@ -30,6 +38,9 @@ class SelfEdgeLaserFilter : public filters::FilterBase<sensor_msgs::LaserScan> {
 
     //! The maximum distance of filtered points from the trail's line
     double delta_threshold;
+
+    //! The laser data from previous two scans
+    static LaserData* buffer;
 
     //! Cut all that is closer than this distance
     double min_valid_distance;

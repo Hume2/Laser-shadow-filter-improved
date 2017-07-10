@@ -6,7 +6,12 @@
 
 namespace nifti_laser_filtering {
 
+LaserData* SelfEdgeLaserFilter::buffer = NULL;
+
 SelfEdgeLaserFilter::~SelfEdgeLaserFilter() {
+  if (buffer) {
+    delete[] buffer;
+  }
 }
 
 bool SelfEdgeLaserFilter::configure() {
@@ -61,14 +66,40 @@ bool SelfEdgeLaserFilter::configure() {
 }
 
 bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, sensor_msgs::LaserScan &filtered_scan) {
+  if (buffer == null) {
+    buffer = new LaserData[input_scan.ranges.size()];
+    for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
+      buffer[i].r1 = std::numeric_limits<float>::quiet_NaN();
+      buffer[i].r2 = std::numeric_limits<float>::quiet_NaN();
+    }
+  }
+
   const double cos_gamma = cos(input_scan.angle_increment);
   const double cos_2gamma = cos(2 * input_scan.angle_increment);
 
-  double a1, a2, a3, r1, r2, r3, ra, rb, dr, dr2, cos_edge;
+  filtered_scan = input_scan;
+
+  double a1, a2, a3, cos_edge;
+
+  // vertical filtering
+  for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
+    if ((buffer[i].r1 != buffer[i].r1) ||
+        (buffer[i].r2 != buffer[i].r2) ||
+        (filtered_scan.ranges[i] != filtered_scan.ranges[i])) { //some points already filtered
+      continue;
+    }
+    a1 = buffer[i].r1*buffer[i].r1 + buffer[i].r2*buffer[i].r2 - 2*buffer[i].r1*buffer[i].r2*cos_gamma;
+    a2 = buffer[i].r2*buffer[i].r2 + r3*r3 - 2*buffer[i].r1*buffer[i].r2*cos_gamma;
+    a3 = buffer[i].r1*buffer[i].r1 + r3*r3 - 2*buffer[i].r1*buffer[i].r2*cos_2gamma;
+
+    cos_edge = (a3 - a1 - a2) / (2 * sqrt(a1*a2));
+  }
+
+  // horizontal filtering
+  double r1, r2, r3, ra, rb, dr, dr2;
   int num_filtered_points = 0;
   int sgn;
 
-  filtered_scan = input_scan;
   for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
     r1 = r2;
     r2 = r3;
