@@ -66,38 +66,68 @@ bool SelfEdgeLaserFilter::configure() {
 }
 
 bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, sensor_msgs::LaserScan &filtered_scan) {
-  if (buffer == null) {
+  if (!buffer) {
     buffer = new LaserData[input_scan.ranges.size()];
     for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
       buffer[i].r1 = std::numeric_limits<float>::quiet_NaN();
       buffer[i].r2 = std::numeric_limits<float>::quiet_NaN();
+      buffer[i].dr2 = std::numeric_limits<float>::quiet_NaN();
     }
   }
 
   const double cos_gamma = cos(input_scan.angle_increment);
   const double cos_2gamma = cos(2 * input_scan.angle_increment);
 
+  int num_filtered_points = 0;
+
   filtered_scan = input_scan;
 
-  double a1, a2, a3, cos_edge;
+  double r1, r2, r3, a1, a2, a3, dr, cos_edge;
 
   // vertical filtering
   for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
-    if ((buffer[i].r1 != buffer[i].r1) ||
-        (buffer[i].r2 != buffer[i].r2) ||
-        (filtered_scan.ranges[i] != filtered_scan.ranges[i])) { //some points already filtered
+    r1 = buffer[i].r1;
+    r2 = buffer[i].r2;
+    r3 = filtered_scan.ranges[i];
+
+    buffer[i].r1 = r2;
+    buffer[i].r2 = r3;
+
+    if (buffer[i].dr2 == buffer[i].dr2) {
+      dr = r3 - r2;
+      if (buffer[i].c >= 0) {
+        if (fabs(buffer[i].dr2 - dr) < delta_threshold) {
+          buffer[i].dr2 = dr;
+          buffer[i].c++;
+        }
+        filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
+        num_filtered_points += 1;
+        continue;
+      } else {
+        buffer[i].dr2 = std::numeric_limits<float>::quiet_NaN();
+      }
+    }
+
+    if ((r1 != r1) || (r3 != r3)) { //some points already filtered
       continue;
     }
-    a1 = buffer[i].r1*buffer[i].r1 + buffer[i].r2*buffer[i].r2 - 2*buffer[i].r1*buffer[i].r2*cos_gamma;
-    a2 = buffer[i].r2*buffer[i].r2 + r3*r3 - 2*buffer[i].r1*buffer[i].r2*cos_gamma;
-    a3 = buffer[i].r1*buffer[i].r1 + r3*r3 - 2*buffer[i].r1*buffer[i].r2*cos_2gamma;
+
+    a1 = r1*r1 + r2*r2 - 2*r1*r2*cos_gamma;
+    a2 = r2*r2 + r3*r3 - 2*r2*r3*cos_gamma;
+    a3 = r1*r1 + r3*r3 - 2*r1*r3*cos_2gamma;
 
     cos_edge = (a3 - a1 - a2) / (2 * sqrt(a1*a2));
+
+    if ((cos_edge < cos_max) || (cos_edge > cos_min)) {
+      filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
+      num_filtered_points += 1;
+      buffer[i].dr2 = r3 - r2;
+      buffer[i].c = -1;
+    }
   }
 
   // horizontal filtering
-  double r1, r2, r3, ra, rb, dr, dr2;
-  int num_filtered_points = 0;
+  double ra, rb, dr2;
   int sgn;
 
   for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
