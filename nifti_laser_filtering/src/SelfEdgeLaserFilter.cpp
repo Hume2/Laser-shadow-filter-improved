@@ -84,57 +84,6 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
 
   double r1, r2, r3, a1, a2, a3, dr, cos_edge;
 
-  // vertical filtering
-  for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
-    r1 = buffer[i].r1;
-    r2 = buffer[i].r2;
-    r3 = filtered_scan.ranges[i];
-
-    buffer[i].r1 = r2;
-    buffer[i].r2 = r3;
-
-    if (buffer[i].dr2 == buffer[i].dr2) {
-      dr = r3 - r2;
-      if (buffer[i].c >= 0) {
-        if (fabs(buffer[i].dr2 - dr) < delta_threshold) {
-          buffer[i].dr2 = dr;
-        } else {
-          buffer[i].c--;
-        }
-        filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
-        num_filtered_points += 1;
-        continue;
-      } else {
-        buffer[i].dr2 = std::numeric_limits<float>::quiet_NaN();
-      }
-    }
-
-    if ((r1 != r1) || (r3 != r3)) { //some points already filtered
-      continue;
-    }
-
-    if (r2 > r1 || r2 > r3) { //edge not convex
-      continue;
-    }
-
-    a1 = r1*r1 + r2*r2 - 2*r1*r2*cos_gamma;
-    a2 = r2*r2 + r3*r3 - 2*r2*r3*cos_gamma;
-    a3 = r1*r1 + r3*r3 - 2*r1*r3*cos_2gamma;
-
-    cos_edge = (a3 - a1 - a2) / (2 * sqrt(a1*a2));
-
-    if (r1 > r3) { //We have already missed the edge.
-      continue;
-    }
-
-    if ((cos_edge < cos_max) || (cos_edge > cos_min)) {
-      filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
-      num_filtered_points += 1;
-      buffer[i].dr2 = r3 - r2;
-      buffer[i].c = 3;
-    }
-  }
-
   // horizontal filtering
   double ra, rb, dr2;
   int sgn;
@@ -202,6 +151,58 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
       }
     }
   }
+
+  // vertical filtering
+  for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
+    r1 = buffer[i].r1;
+    r2 = buffer[i].r2;
+    r3 = filtered_scan.ranges[i];
+
+    buffer[i].r1 = r2;
+    buffer[i].r2 = r3;
+
+    if (buffer[i].dr2 == buffer[i].dr2) {
+      dr = r3 - r2;
+      if (buffer[i].c >= 0) {
+        if (fabs(buffer[i].dr2 - dr) < delta_threshold) {
+          buffer[i].dr2 = dr;
+        } else {
+          buffer[i].c--;
+        }
+        filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
+        num_filtered_points += 1;
+        continue;
+      } else {
+        buffer[i].dr2 = std::numeric_limits<float>::quiet_NaN();
+      }
+    }
+
+    if ((r1 != r1) || (r3 != r3)) { //some points already filtered
+      continue;
+    }
+
+    if (r2 > r1 || r2 > r3) { //edge not convex
+      continue;
+    }
+
+    a1 = r1*r1 + r2*r2 - 2*r1*r2*cos_gamma;
+    a2 = r2*r2 + r3*r3 - 2*r2*r3*cos_gamma;
+    a3 = r1*r1 + r3*r3 - 2*r1*r3*cos_2gamma;
+
+    cos_edge = (a3 - a1 - a2) / (2 * sqrt(a1*a2));
+
+    if (r1 > r3) { //We have already missed the edge.
+      continue;
+    }
+
+    if ((cos_edge < cos_max) || (cos_edge > cos_min)) {
+      filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
+      num_filtered_points += 1;
+      buffer[i].dr2 = r3 - r2;
+      buffer[i].c = 3;
+    }
+  }
+
 
   ROS_DEBUG("Self edge shadow filtering removed %u points.", num_filtered_points);
 
