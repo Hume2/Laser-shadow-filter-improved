@@ -59,6 +59,14 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
     r1 = r2;
     r2 = r3;
     r3 = filtered_scan.ranges[i];
+
+    //check whether the value is really valid
+    if (r3 < input_scan.range_min || r3 > input_scan.range_max) {
+      filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
+      r3 = std::numeric_limits<float>::quiet_NaN();
+      num_filtered_points += 1;
+    }
+
     if (i < 2) { //get at least three points
       continue;
     }
