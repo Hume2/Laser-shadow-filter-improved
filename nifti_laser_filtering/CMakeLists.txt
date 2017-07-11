@@ -74,6 +74,7 @@ include_directories(
 
 add_library(tradr_laser_filters
     src/TradrLaserShadowFilter.cpp
+	src/IslandFilter.cpp
 	src/PeakFilter.cpp
 	src/NearFilter.cpp
 	src/SelfEdgeLaserFilter.cpp

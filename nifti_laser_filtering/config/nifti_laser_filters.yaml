@@ -15,7 +15,7 @@ nifti_laser_filtering:
         params:
             min_angle_close: 0.10  # radians
             min_angle_far: 0.10  # radians
-            far_distance_threshold: 0.7  # meters
+            far_distance_threshold: 0.7  # metres
 
     -   name: SelfEdgeLaserFilter
         type: nifti_laser_filtering/SelfEdgeLaserFilter
@@ -23,4 +23,19 @@ nifti_laser_filtering:
             max_edge_distance: 0.5  # meters
             min_filter_angle: 1.466  # radians
             max_filter_angle: 2.932  # radians
-            delta_threshold: 0.05  # meters
+            delta_threshold: 0.01  # meters
+
+    -   name: RobotSelfFilter
+        type: robot_self_filter/RobotSelfFilter
+        params:
+            robot_frame: 'base_link'
+            min_distance: 0.0
+            max_distance: 2.0
+            inflation_scale: 1.15
+            inflation_padding: 0.01
+            robot_description_param: '/nifti_robot_description'
+            wait_for_transform: 0.5
+            compute_bounding_sphere: True
+            compute_bounding_box: True
+            compute_debug_bounding_box: False
+
