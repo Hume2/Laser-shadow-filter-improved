@@ -33,28 +33,28 @@ bool IslandFilter::update(const sensor_msgs::LaserScan& input_scan, sensor_msgs:
   filtered_scan = input_scan;
 
   int island_points = 0;
-  double r, average;
-  double summa = 0;
+  double r;//, average;
+ // double summa = 0;
   bool last_valid = false;
 
   for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
     r = filtered_scan.ranges[i];
-    if (r == r) {
+    if (r == r && r < max_distance) {
       island_points++;
-      summa += r;
+      //summa += r;
     } else if (last_valid) {
-      average = summa / island_points;
-      if (island_points < max_count && average < max_distance) {
+      //average = summa / island_points;
+      if (island_points < max_count) {
         //remove island
-        for (unsigned int j = i - j; j <= i; j++) {
+        for (unsigned int j = i - island_points; j < i; j++) {
           filtered_scan.ranges[j] = std::numeric_limits<float>::quiet_NaN();
           num_filtered_points += 1;
         }
       }
-      summa = 0;
+      //summa = 0;
       island_points = 0;
     }
-    last_valid = r == r;
+    last_valid = r == r && r < max_distance;
   }
 
   ROS_DEBUG("Island filter filtered %u points.", num_filtered_points);

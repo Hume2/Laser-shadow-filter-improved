@@ -25,6 +25,12 @@ nifti_laser_filtering:
             max_filter_angle: 2.932  # radians
             delta_threshold: 0.01  # meters
 
+    -   name: IslandFilter
+        type: nifti_laser_filtering/IslandFilter
+        params:
+            max_distance: 0.4  # metres
+            max_count: 50 
+
     -   name: RobotSelfFilter
         type: robot_self_filter/RobotSelfFilter
         params:

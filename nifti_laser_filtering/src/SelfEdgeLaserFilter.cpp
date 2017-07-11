@@ -91,7 +91,7 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
 
     if ((cos_edge < cos_max) || (cos_edge > cos_min)) {
       int j = i;
-      int c = 1;
+      int c = 10;
       //Let's remove the trail.
       ra = r2;
       if (a1 < a3) { //decide which way the trail continues
