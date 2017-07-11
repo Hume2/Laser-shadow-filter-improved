@@ -165,7 +165,7 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
       dr = r3 - r2;
       if (buffer[i].c >= 0) {
         if (fabs(buffer[i].dr2 - dr) < delta_threshold) {
-          buffer[i].dr2 = dr;
+          //buffer[i].dr2 = dr;
         } else {
           buffer[i].c--;
         }
@@ -178,6 +178,10 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
     }
 
     if ((r1 != r1) || (r3 != r3)) { //some points already filtered
+      continue;
+    }
+
+    if (r2 > max_edge_dist) { //edge too far
       continue;
     }
 
