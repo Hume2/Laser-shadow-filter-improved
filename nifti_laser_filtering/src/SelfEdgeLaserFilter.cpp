@@ -107,7 +107,8 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
         dr2 = rb - ra;
         if (fabs(dr2 - dr) < delta_threshold) {
           dr = dr2;
-          c++;
+        } else {
+          c--;
         }
 
         filtered_scan.ranges[j] = std::numeric_limits<float>::quiet_NaN();
