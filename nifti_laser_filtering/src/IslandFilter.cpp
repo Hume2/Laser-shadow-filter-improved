@@ -22,6 +22,13 @@ bool IslandFilter::configure() {
     ROS_DEBUG("IslandFilter: found param max_distance: %.5f m", max_distance);
   }
 
+  if (!filters::FilterBase<sensor_msgs::LaserScan>::getParam("skip_cone", skip_cone)) {
+    ROS_WARN("IslandFilter was not given skip_cone, assuming 1.571 rad.");
+    skip_cone = 1.571;
+  } else {
+    ROS_DEBUG("IslandFilter: found param skip_cone: %.5f rad", skip_cone);
+  }
+
   if (!filters::FilterBase<sensor_msgs::LaserScan>::getParam("max_count", max_count)) {
     ROS_WARN("IslandFilter was not given max_count, assuming 10.");
     max_count = 10;
@@ -90,7 +97,13 @@ bool IslandFilter::update(const sensor_msgs::LaserScan& input_scan, sensor_msgs:
   bool last_valid = false;
   int delete_big = 0; //count how many points were at the place of island in the previous frame
 
+  int skip_min = skip_cone / input_scan.angle_increment;
+  int skip_max = filtered_scan.ranges.size() - skip_min;
+
   for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
+    if (i > skip_min && i < skip_max) {
+      continue;
+    }
     if (proccess_point(filtered_scan, last_valid, delete_big, island_points, num_filtered_points, i, 1)) {
       //The count of filtered islands might be limited in the future.
     }

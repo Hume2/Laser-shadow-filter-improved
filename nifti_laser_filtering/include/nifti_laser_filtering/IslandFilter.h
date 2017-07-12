@@ -32,6 +32,10 @@ class IslandFilter : public filters::FilterBase<sensor_msgs::LaserScan> {
     //! The maximum count of points detected before a big island to filter it.
     int max_big_rise;
 
+    //! The angle where the skip cone starts. The skip sone is a cone on the front
+    //! of the robot where no islands are going to be filtered.
+    double skip_cone;
+
     //! The laser data from previous two scans
     static bool* buffer;
 };
