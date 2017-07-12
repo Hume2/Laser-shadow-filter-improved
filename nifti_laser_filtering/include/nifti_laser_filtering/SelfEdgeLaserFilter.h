@@ -30,6 +30,12 @@ class SelfEdgeLaserFilter : public filters::FilterBase<sensor_msgs::LaserScan> {
 
     //! The maximum distance of filtered points from the trail's line
     double delta_threshold;
+
+    //! Cut all that is closer than this distance
+    double min_valid_distance;
+
+    //! How many points can be filtered after the trail
+    int after_trail_points;
 };
 
 }

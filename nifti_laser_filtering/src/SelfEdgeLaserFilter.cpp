@@ -42,6 +42,20 @@ bool SelfEdgeLaserFilter::configure() {
     ROS_DEBUG("SelfEdgeLaserFilter: found param delta_threshold: %.5f rad", delta_threshold);
   }
 
+  if (!filters::FilterBase<sensor_msgs::LaserScan>::getParam("min_valid_distance", min_valid_distance)) {
+    ROS_WARN("SelfEdgeLaserFilter was not given min_valid_distance, assuming 0.15 meters.");
+    delta_threshold = 0.15;
+  } else {
+    ROS_DEBUG("SelfEdgeLaserFilter: found param min_valid_distance: %.5f rad", min_valid_distance);
+  }
+
+  if (!filters::FilterBase<sensor_msgs::LaserScan>::getParam("after_trail_points", after_trail_points)) {
+    ROS_WARN("SelfEdgeLaserFilter was not given after_trail_points, assuming 5.");
+    after_trail_points = 5;
+  } else {
+    ROS_DEBUG("SelfEdgeLaserFilter: found param after_trail_points: %i", after_trail_points);
+  }
+
   ROS_INFO("SelfEdgeLaserFilter: Successfully configured.");
   return true;
 }
@@ -61,7 +75,7 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
     r3 = filtered_scan.ranges[i];
 
     //check whether the value is really valid
-    if (r3 < input_scan.range_min || r3 > input_scan.range_max) {
+    if (r3 < input_scan.range_min || r3 > input_scan.range_max || r3 < min_valid_distance) {
       filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
       r3 = std::numeric_limits<float>::quiet_NaN();
       num_filtered_points += 1;
@@ -91,7 +105,7 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
 
     if ((cos_edge < cos_max) || (cos_edge > cos_min)) {
       int j = i;
-      int c = 10;
+      int c = after_trail_points;
       //Let's remove the trail.
       ra = r2;
       if (a1 < a3) { //decide which way the trail continues

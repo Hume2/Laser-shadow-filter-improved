@@ -1,12 +1,6 @@
 nifti_laser_filtering:
     scan_filter_chain:
 
-    -   name: PeakFilter
-        type: nifti_laser_filtering/PeakFilter
-        params:
-            max_filter_angle: 0.524  # radians
-            passes: 3 
-
     -   name: NearFilter
         type: nifti_laser_filtering/NearFilter
 
@@ -20,16 +14,12 @@ nifti_laser_filtering:
     -   name: SelfEdgeLaserFilter
         type: nifti_laser_filtering/SelfEdgeLaserFilter
         params:
-            max_edge_distance: 0.5  # meters
+            max_edge_distance: 0.5  # metres
             min_filter_angle: 1.466  # radians
             max_filter_angle: 2.932  # radians
-            delta_threshold: 0.01  # meters
-
-    -   name: IslandFilter
-        type: nifti_laser_filtering/IslandFilter
-        params:
-            max_distance: 0.8  # metres
-            max_count: 10 
+            delta_threshold: 0.01  # metres
+            min_valid_distance: 0.15 # metres
+            after_trail_points: 5
 
     -   name: RobotSelfFilter
         type: robot_self_filter/RobotSelfFilter
@@ -44,4 +34,10 @@ nifti_laser_filtering:
             compute_bounding_sphere: True
             compute_bounding_box: True
             compute_debug_bounding_box: False
+
+    -   name: IslandFilter
+        type: nifti_laser_filtering/IslandFilter
+        params:
+            max_distance: 0.8  # metres
+            max_count: 20
 
