@@ -46,29 +46,29 @@ bool IslandFilter::proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& l
   double r = filtered_scan.ranges[i];
 
   if (r == r && r < max_distance) {
+    //we are on an island, so let's count the points
     island_points++;
     if (!buffer[i]) {
       delete_big++;
     }
-    //summa += r;
   } else {
     if (last_valid) {
-      //average = summa / island_points;
+      // The island ends right there, so let's decide whether it should be kept or removed.
       if (island_points < max_count || delete_big < max_big_rise) {
         //remove the island
         for (unsigned int j = i - island_points*sgn; j != i; j += sgn) {
           filtered_scan.ranges[j] = std::numeric_limits<float>::quiet_NaN();
-          //buffer[j] = false;
           num_filtered_points += 1;
         }
         result = true;
-        //i -= island_points;
       }
     }
-    //summa = 0;
+    // The variables should be reinitialised for the next island.
     island_points = 0;
     delete_big = 0;
   }
+
+  // Write the current data into the buffers.
   last_valid = r == r && r < max_distance;
   buffer[i] = last_valid;
   return result;
@@ -76,7 +76,7 @@ bool IslandFilter::proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& l
 
 bool IslandFilter::update(const sensor_msgs::LaserScan& input_scan, sensor_msgs::LaserScan& filtered_scan)
 {
-  if (!buffer) {
+  if (!buffer) { // Initialise the buffer
     buffer = new bool[input_scan.ranges.size()];
     for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
       buffer[i] = false;
@@ -87,17 +87,16 @@ bool IslandFilter::update(const sensor_msgs::LaserScan& input_scan, sensor_msgs:
   filtered_scan = input_scan;
 
   int island_points = 0;
-  //double average;
- // double summa = 0;
   bool last_valid = false;
-  int delete_big = 0;
+  int delete_big = 0; //count how many points were at the place of island in the previous frame
 
   for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
     if (proccess_point(filtered_scan, last_valid, delete_big, island_points, num_filtered_points, i, 1)) {
-      //break;
+      //The count of filtered islands might be limited in the future.
     }
   }
 
+  // This is ready for the backward pass
   /*for (unsigned int i = filtered_scan.ranges.size()-1; i >= 0; i--) {
     if (proccess_point(filtered_scan, last_valid, island_points, num_filtered_points, i, -1)) {
       break;
