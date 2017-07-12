@@ -54,7 +54,7 @@ bool IslandFilter::proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& l
   } else {
     if (last_valid) {
       //average = summa / island_points;
-      if (island_points < max_count || delete_big < 10) {
+      if (island_points < max_count || delete_big < max_big_rise) {
         //remove the island
         for (unsigned int j = i - island_points*sgn; j != i; j += sgn) {
           filtered_scan.ranges[j] = std::numeric_limits<float>::quiet_NaN();

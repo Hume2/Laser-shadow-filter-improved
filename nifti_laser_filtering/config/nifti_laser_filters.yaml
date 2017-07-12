@@ -47,5 +47,5 @@ nifti_laser_filtering:
         params:
             max_distance: 0.8  # metres
             max_count: 10
-            max_big_rise: 10
+            max_big_rise: 8
 
