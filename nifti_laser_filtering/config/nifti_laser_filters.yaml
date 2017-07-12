@@ -4,6 +4,12 @@ nifti_laser_filtering:
     -   name: NearFilter
         type: nifti_laser_filtering/NearFilter
 
+    -   name: PeakFilter
+        type: nifti_laser_filtering/PeakFilter
+        params:
+            max_filter_angle: 0.524  # radians
+            passes: 3 
+
     -   name: TradrLaserShadowFilter
         type: nifti_laser_filtering/TradrLaserShadowFilter
         params:
@@ -18,8 +24,9 @@ nifti_laser_filtering:
             min_filter_angle: 1.466  # radians
             max_filter_angle: 2.932  # radians
             delta_threshold: 0.01  # metres
-            min_valid_distance: 0.15 # metres
+            min_valid_distance: 0.2 # metres
             after_trail_points: 5
+            use_vertical_filtering: True
 
     -   name: RobotSelfFilter
         type: robot_self_filter/RobotSelfFilter
@@ -39,5 +46,5 @@ nifti_laser_filtering:
         type: nifti_laser_filtering/IslandFilter
         params:
             max_distance: 0.8  # metres
-            max_count: 20
+            max_count: 12
 
