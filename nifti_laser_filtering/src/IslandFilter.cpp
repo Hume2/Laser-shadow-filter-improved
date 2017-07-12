@@ -6,10 +6,15 @@
 
 namespace nifti_laser_filtering {
 
-bool* IslandFilter::buffer = NULL;
+bool** IslandFilter::buffer = NULL;
+int IslandFilter::current_buffer = 0;
+int IslandFilter::buffer_width = 0;
 
 IslandFilter::~IslandFilter() {
   if (buffer) {
+    for (unsigned int i = 0; i < buffer_width; i++) {
+      delete[] buffer[i];
+    }
     delete[] buffer;
   }
 }
@@ -36,6 +41,13 @@ bool IslandFilter::configure() {
     ROS_DEBUG("IslandFilter: found param max_big_rise: %i", max_big_rise);
   }
 
+  if (!filters::FilterBase<sensor_msgs::LaserScan>::getParam("buffer_depth", buffer_depth)) {
+    ROS_WARN("IslandFilter was not given buffer_depth, assuming 1.");
+    buffer_depth = 1;
+  } else {
+    ROS_DEBUG("IslandFilter: found param buffer_depth: %i", buffer_depth);
+  }
+
   ROS_INFO("IslandFilter: Successfully configured.");
   return true;
 }
@@ -48,8 +60,10 @@ bool IslandFilter::proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& l
   if (r == r && r < max_distance) {
     //we are on an island, so let's count the points
     island_points++;
-    if (!buffer[i]) {
-      delete_big++;
+    for (unsigned int j = 0; j < buffer_depth; j++) {
+      if (!buffer[i][j]) {
+        delete_big++;
+      }
     }
   } else {
     if (last_valid) {
@@ -70,17 +84,26 @@ bool IslandFilter::proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& l
 
   // Write the current data into the buffers.
   last_valid = r == r && r < max_distance;
-  buffer[i] = last_valid;
+  //buffer[i][current_buffer] = last_valid;
   return result;
 }
 
 bool IslandFilter::update(const sensor_msgs::LaserScan& input_scan, sensor_msgs::LaserScan& filtered_scan)
 {
   if (!buffer) { // Initialise the buffer
-    buffer = new bool[input_scan.ranges.size()];
-    for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
-      buffer[i] = false;
+    buffer = new bool*[input_scan.ranges.size()];
+    buffer_width = input_scan.ranges.size();
+    for (unsigned int i = 0; i < buffer_width; i++) {
+      buffer[i] = new bool[buffer_depth];
+      for (unsigned int j = 0; j < buffer_depth; j++) {
+        buffer[i][j] = false;
+      }
     }
+  }
+
+  current_buffer++;
+  if (current_buffer >= buffer_depth) {
+    current_buffer = 0;
   }
 
   int num_filtered_points = 0;

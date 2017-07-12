@@ -46,6 +46,7 @@ nifti_laser_filtering:
         type: nifti_laser_filtering/IslandFilter
         params:
             max_distance: 0.8  # metres
-            max_count: 10
-            max_big_rise: 8
+            max_count: 5
+            max_big_rise: 24
+            buffer_depth: 3
 

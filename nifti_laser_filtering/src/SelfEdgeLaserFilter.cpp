@@ -173,7 +173,7 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
         dr = r3 - r2;
         if (buffer[i].c >= 0) {
           if (fabs(buffer[i].dr2 - dr) < delta_threshold) {
-            //buffer[i].dr2 = dr;
+            buffer[i].dr2 = dr;
           } else {
             buffer[i].c--;
           }
