@@ -29,6 +29,13 @@ bool IslandFilter::configure() {
     ROS_DEBUG("IslandFilter: found param max_count: %i", max_count);
   }
 
+  if (!filters::FilterBase<sensor_msgs::LaserScan>::getParam("max_big_rise", max_big_rise)) {
+    ROS_WARN("IslandFilter was not given max_big_rise, assuming 10.");
+    max_big_rise = 10;
+  } else {
+    ROS_DEBUG("IslandFilter: found param max_big_rise: %i", max_big_rise);
+  }
+
   ROS_INFO("IslandFilter: Successfully configured.");
   return true;
 }

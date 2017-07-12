@@ -29,6 +29,9 @@ class IslandFilter : public filters::FilterBase<sensor_msgs::LaserScan> {
     //! The maximum count of points per filtered island.
     int max_count;
 
+    //! The maximum count of points detected before a big island to filter it.
+    int max_big_rise;
+
     //! The laser data from previous two scans
     static bool* buffer;
 };
