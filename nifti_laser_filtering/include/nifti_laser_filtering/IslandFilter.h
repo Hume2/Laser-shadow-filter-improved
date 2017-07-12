@@ -19,7 +19,7 @@ class IslandFilter : public filters::FilterBase<sensor_msgs::LaserScan> {
     bool update(const sensor_msgs::LaserScan& input_scan, sensor_msgs::LaserScan& filtered_scan);
 
     //! Proccess one point
-    bool proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& last_valid,
+    bool proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& last_valid, int& delete_big,
                         int& island_points, int& num_filtered_points, int i, int sgn);
 
   protected:
@@ -28,6 +28,9 @@ class IslandFilter : public filters::FilterBase<sensor_msgs::LaserScan> {
 
     //! The maximum count of points per filtered island.
     int max_count;
+
+    //! The laser data from previous two scans
+    static bool* buffer;
 };
 
 }

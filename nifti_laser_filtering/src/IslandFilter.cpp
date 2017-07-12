@@ -6,7 +6,12 @@
 
 namespace nifti_laser_filtering {
 
+bool* IslandFilter::buffer = NULL;
+
 IslandFilter::~IslandFilter() {
+  if (buffer) {
+    delete[] buffer;
+  }
 }
 
 bool IslandFilter::configure() {
@@ -28,21 +33,25 @@ bool IslandFilter::configure() {
   return true;
 }
 
-bool IslandFilter::proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& last_valid,
+bool IslandFilter::proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& last_valid, int& delete_big,
                     int& island_points, int& num_filtered_points, int i, int sgn) {
   bool result = false;
   double r = filtered_scan.ranges[i];
 
   if (r == r && r < max_distance) {
     island_points++;
+    if (!buffer[i]) {
+      delete_big++;
+    }
     //summa += r;
   } else {
     if (last_valid) {
       //average = summa / island_points;
-      if (island_points < max_count) {
+      if (island_points < max_count || delete_big < 10) {
         //remove the island
         for (unsigned int j = i - island_points*sgn; j != i; j += sgn) {
           filtered_scan.ranges[j] = std::numeric_limits<float>::quiet_NaN();
+          //buffer[j] = false;
           num_filtered_points += 1;
         }
         result = true;
@@ -51,12 +60,22 @@ bool IslandFilter::proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& l
     }
     //summa = 0;
     island_points = 0;
+    delete_big = 0;
   }
   last_valid = r == r && r < max_distance;
+  buffer[i] = last_valid;
   return result;
 }
 
-bool IslandFilter::update(const sensor_msgs::LaserScan& input_scan, sensor_msgs::LaserScan& filtered_scan) {
+bool IslandFilter::update(const sensor_msgs::LaserScan& input_scan, sensor_msgs::LaserScan& filtered_scan)
+{
+  if (!buffer) {
+    buffer = new bool[input_scan.ranges.size()];
+    for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
+      buffer[i] = false;
+    }
+  }
+
   int num_filtered_points = 0;
   filtered_scan = input_scan;
 
@@ -64,9 +83,10 @@ bool IslandFilter::update(const sensor_msgs::LaserScan& input_scan, sensor_msgs:
   //double average;
  // double summa = 0;
   bool last_valid = false;
+  int delete_big = 0;
 
   for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
-    if (proccess_point(filtered_scan, last_valid, island_points, num_filtered_points, i, 1)) {
+    if (proccess_point(filtered_scan, last_valid, delete_big, island_points, num_filtered_points, i, 1)) {
       //break;
     }
   }
