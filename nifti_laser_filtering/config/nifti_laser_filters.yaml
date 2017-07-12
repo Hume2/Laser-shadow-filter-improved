@@ -25,7 +25,7 @@ nifti_laser_filtering:
             max_filter_angle: 2.932  # radians
             delta_threshold: 0.01  # metres
             min_valid_distance: 0.2 # metres
-            after_trail_points: 5
+            after_trail_points: 10
             use_vertical_filtering: True
 
     -   name: RobotSelfFilter
@@ -46,5 +46,5 @@ nifti_laser_filtering:
         type: nifti_laser_filtering/IslandFilter
         params:
             max_distance: 0.8  # metres
-            max_count: 12
+            max_count: 15
 
