@@ -28,8 +28,8 @@ nifti_laser_filtering:
     -   name: IslandFilter
         type: nifti_laser_filtering/IslandFilter
         params:
-            max_distance: 0.4  # metres
-            max_count: 50 
+            max_distance: 0.8  # metres
+            max_count: 10 
 
     -   name: RobotSelfFilter
         type: robot_self_filter/RobotSelfFilter

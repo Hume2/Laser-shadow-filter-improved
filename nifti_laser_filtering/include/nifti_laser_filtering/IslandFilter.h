@@ -18,6 +18,10 @@ class IslandFilter : public filters::FilterBase<sensor_msgs::LaserScan> {
     //! Apply the filter.
     bool update(const sensor_msgs::LaserScan& input_scan, sensor_msgs::LaserScan& filtered_scan);
 
+    //! Proccess one point
+    bool proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& last_valid,
+                        int& island_points, int& num_filtered_points, int i, int sgn);
+
   protected:
     //! The maximum distance of island to be filtered.
     double max_distance;
