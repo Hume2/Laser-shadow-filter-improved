@@ -55,7 +55,7 @@ bool IslandFilter::proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& l
   if (r == r && r < max_distance) {
     //we are on an island, so let's count the points
     island_points++;
-    if (!buffer[i]) {
+    if (buffer[i]) {
       delete_big++;
     }
   } else {
