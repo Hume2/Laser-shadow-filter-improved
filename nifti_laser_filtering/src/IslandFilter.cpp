@@ -22,6 +22,13 @@ bool IslandFilter::configure() {
     ROS_DEBUG("IslandFilter: found param max_distance: %.5f m", max_distance);
   }
 
+  if (!filters::FilterBase<sensor_msgs::LaserScan>::getParam("min_wall_distance", min_wall_distance)) {
+    ROS_WARN("IslandFilter was not given min_wall_distance, assuming 0.05 m.");
+    min_wall_distance = 0.05;
+  } else {
+    ROS_DEBUG("IslandFilter: found param min_wall_distance: %.5f m", min_wall_distance);
+  }
+
   if (!filters::FilterBase<sensor_msgs::LaserScan>::getParam("skip_cone", skip_cone)) {
     ROS_WARN("IslandFilter was not given skip_cone, assuming 1.571 rad.");
     skip_cone = 1.571;
@@ -48,9 +55,19 @@ bool IslandFilter::configure() {
 }
 
 bool IslandFilter::proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& last_valid, int& delete_big,
-                    int& island_points, int& num_filtered_points, int i, int sgn) {
+                    double& last_dist, int& island_points, int& num_filtered_points, int i, int sgn) {
   bool result = false;
   double r = filtered_scan.ranges[i];
+
+  //detect the island even when there is a big jummp
+  if (last_dist == last_dist) {
+    double dr = r - last_dist;
+    if (dr >= min_wall_distance) {
+      last_valid = false;
+    } else if (dr <= -min_wall_distance) {
+      r = max_distance + 1.0;
+    }
+  }
 
   if (r == r && r < max_distance) {
     //we are on an island, so let's count the points
@@ -78,6 +95,7 @@ bool IslandFilter::proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& l
   // Write the current data into the buffers.
   last_valid = r == r && r < max_distance;
   buffer[i] = last_valid;
+  last_dist = r;
   return result;
 }
 
@@ -95,6 +113,7 @@ bool IslandFilter::update(const sensor_msgs::LaserScan& input_scan, sensor_msgs:
 
   int island_points = 0;
   bool last_valid = false;
+  double last_dist = 0;
   int delete_big = 0; //count how many points were at the place of island in the previous frame
 
   int skip_min = skip_cone / input_scan.angle_increment;
@@ -104,7 +123,8 @@ bool IslandFilter::update(const sensor_msgs::LaserScan& input_scan, sensor_msgs:
     if (i > skip_min && i < skip_max) {
       continue;
     }
-    if (proccess_point(filtered_scan, last_valid, delete_big, island_points, num_filtered_points, i, 1)) {
+    if (proccess_point(filtered_scan, last_valid, delete_big, last_dist,
+                       island_points, num_filtered_points, i, 1)) {
       //The count of filtered islands might be limited in the future.
     }
   }

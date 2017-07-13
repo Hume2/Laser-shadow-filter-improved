@@ -20,7 +20,7 @@ class IslandFilter : public filters::FilterBase<sensor_msgs::LaserScan> {
 
     //! Proccess one point
     bool proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& last_valid, int& delete_big,
-                        int& island_points, int& num_filtered_points, int i, int sgn);
+                        double& last_dist, int& island_points, int& num_filtered_points, int i, int sgn);
 
   protected:
     //! The maximum distance of island to be filtered.
@@ -35,6 +35,9 @@ class IslandFilter : public filters::FilterBase<sensor_msgs::LaserScan> {
     //! The angle where the skip cone starts. The skip sone is a cone on the front
     //! of the robot where no islands are going to be filtered.
     double skip_cone;
+
+    //! The minimum distance between island and a background wall
+    double min_wall_distance;
 
     //! The laser data from previous two scans
     static bool* buffer;
