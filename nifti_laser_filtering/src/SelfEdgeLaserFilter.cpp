@@ -130,7 +130,6 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
     cos_edge = (a3 - a1 - a2) / (2 * sqrt(a1*a2));
 
     if ((cos_edge < cos_max) && (cos_edge > cos_min)) {
-      //ROS_INFO("cos_max = %.5f, cos_edge = %.5f, cos_min = %.5f", cos_max, cos_edge, cos_min);
       int j = i;
       int c = after_trail_points;
       //Let's remove the trail.
@@ -173,9 +172,7 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
       if (buffer[i].dr2 == buffer[i].dr2) {
         dr = r3 - r2;
         if (buffer[i].c >= 0) {
-          if (fabs(buffer[i].dr2 - dr) < delta_threshold) {
-            //buffer[i].dr2 = dr;
-          } else {
+          if (!(fabs(buffer[i].dr2 - dr) < delta_threshold)) {
             buffer[i].c--;
           }
           filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();

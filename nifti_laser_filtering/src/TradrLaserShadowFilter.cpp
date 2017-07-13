@@ -65,18 +65,16 @@ namespace nifti_laser_filtering {
     }
 
     bool TradrLaserShadowFilter::update(const sensor_msgs::LaserScan &input_scan, sensor_msgs::LaserScan &filtered_scan) {
-        //const float sin_gamma = sin(input_scan.angle_increment);
-        //const float cos_gamma = cos(input_scan.angle_increment);
         float r0, r1;
-        //const float r_min = input_scan.range_min;
-        //const float r_max = input_scan.range_max;
 
         unsigned int num_filtered_points = 0;
 
         // go through the scan from one side to the other, and when two neighboring points form a very obtuse
         // triangle together with the sensor origin, discard the points
+
         filtered_scan = input_scan;
         r0 = input_scan.ranges[0];
+
         for (unsigned int i = 1; i < input_scan.ranges.size(); i++) {
             r1 = input_scan.ranges[i];
             proccess_point(i, r0, r1, input_scan, filtered_scan, num_filtered_points);

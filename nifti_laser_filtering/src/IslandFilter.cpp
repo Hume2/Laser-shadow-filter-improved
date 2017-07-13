@@ -123,18 +123,9 @@ bool IslandFilter::update(const sensor_msgs::LaserScan& input_scan, sensor_msgs:
     if (i > skip_min && i < skip_max) {
       continue;
     }
-    if (proccess_point(filtered_scan, last_valid, delete_big, last_dist,
-                       island_points, num_filtered_points, i, 1)) {
-      //The count of filtered islands might be limited in the future.
-    }
+    proccess_point(filtered_scan, last_valid, delete_big, last_dist,
+                       island_points, num_filtered_points, i, 1);
   }
-
-  // This is ready for the backward pass
-  /*for (unsigned int i = filtered_scan.ranges.size()-1; i >= 0; i--) {
-    if (proccess_point(filtered_scan, last_valid, island_points, num_filtered_points, i, -1)) {
-      break;
-    }
-  }*/
 
   ROS_DEBUG("Island filter filtered %u points.", num_filtered_points);
 
