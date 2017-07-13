@@ -123,6 +123,7 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
       continue;
     }
 
+    // Calculate the cosine of angle as shown bellow
     a1 = r1*r1 + r2*r2 - 2*r1*r2*cos_gamma;
     a2 = r2*r2 + r3*r3 - 2*r2*r3*cos_gamma;
     a3 = r1*r1 + r3*r3 - 2*r1*r3*cos_2gamma;
@@ -135,22 +136,28 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
       //Let's remove the trail.
       ra = r2;
       if (r1 > r3) { //decide which way the trail continues
+        // go backwards
         sgn = -1;
         j -= 2;
       } else {
+        // go forwards
         sgn = 1;
       }
 
+      // remove the trail points one by one
       while (j >= 0 && j < filtered_scan.ranges.size() && c >= 0) {
         rb = ra;
         ra = filtered_scan.ranges[j];
         dr2 = rb - ra;
+
+        // check whether we are still on the trail
         if (fabs(dr2 - dr) < delta_threshold) {
           dr = dr2;
         } else {
           c--;
         }
 
+        // remove the point
         filtered_scan.ranges[j] = std::numeric_limits<float>::quiet_NaN();
         num_filtered_points += 1;
 
@@ -162,6 +169,7 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
   // vertical filtering
   if (use_vertical_filtering) {
     for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
+      // get some data
       r1 = buffer[i].r1;
       r2 = buffer[i].r2;
       r3 = filtered_scan.ranges[i];
@@ -169,19 +177,29 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
       buffer[i].r1 = r2;
       buffer[i].r2 = r3;
 
+      // If we are already removing a trail, let's continue.
       if (buffer[i].dr2 == buffer[i].dr2) {
         dr = r3 - r2;
+
+        // decide whether the trail still continues
         if (buffer[i].c >= 0) {
           if (!(fabs(buffer[i].dr2 - dr) < delta_threshold)) {
             buffer[i].c--;
           }
+
+          // remove one point
           filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
           num_filtered_points += 1;
           continue;
         } else {
+
+          // stop removing the points
           buffer[i].dr2 = std::numeric_limits<float>::quiet_NaN();
         }
       }
+
+      // Apparently we are not removing any trail, so let's look whether there
+      // isn't any edge.
 
       if ((r1 != r1) || (r3 != r3)) { //some points already filtered
         continue;
@@ -195,6 +213,7 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
         continue;
       }
 
+      // Calculate the cosine of angle as shown bellow
       a1 = r1*r1 + r2*r2 - 2*r1*r2*cos_gamma;
       a2 = r2*r2 + r3*r3 - 2*r2*r3*cos_gamma;
       a3 = r1*r1 + r3*r3 - 2*r1*r3*cos_2gamma;
@@ -206,8 +225,11 @@ bool SelfEdgeLaserFilter::update(const sensor_msgs::LaserScan &input_scan, senso
       }
 
       if ((cos_edge < cos_max) && (cos_edge > cos_min)) {
+        // The edge is right there, so let's remove the trail.
         filtered_scan.ranges[i] = std::numeric_limits<float>::quiet_NaN();
         num_filtered_points += 1;
+
+        // Save into the buffers that we are going to remove the trail.
         buffer[i].dr2 = r3 - r2;
         buffer[i].c = after_trail_points;
       }

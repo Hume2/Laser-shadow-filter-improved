@@ -62,24 +62,33 @@ bool IslandFilter::proccess_point(sensor_msgs::LaserScan& filtered_scan, bool& l
   //detect the island even when there is a big jummp
   if (last_dist == last_dist) {
     double dr = r - last_dist;
-    if (dr >= min_wall_distance) {
+
+    if (dr >= min_wall_distance) { // The island begins there.
       last_valid = false;
-    } else if (dr <= -min_wall_distance) {
+
+    } else if (dr <= -min_wall_distance) { // The island ends there.
       r = max_distance + 1.0;
     }
   }
 
   if (r == r && r < max_distance) {
+
     //we are on an island, so let's count the points
     island_points++;
+
+    //count also the points form the previous frame
     if (buffer[i]) {
       delete_big++;
     }
   } else {
+    // If the last point was on an island, the island ends right there.
+    // Else we are already in the gap, so there's nothing to remove.
     if (last_valid) {
+
       // The island ends right there, so let's decide whether it should be kept or removed.
       if (island_points < max_count || delete_big < max_big_rise) {
-        //remove the island
+
+        //remove the island points one by one
         for (unsigned int j = i - island_points*sgn; j != i; j += sgn) {
           filtered_scan.ranges[j] = std::numeric_limits<float>::quiet_NaN();
           num_filtered_points += 1;
@@ -116,15 +125,18 @@ bool IslandFilter::update(const sensor_msgs::LaserScan& input_scan, sensor_msgs:
   double last_dist = 0;
   int delete_big = 0; //count how many points were at the place of island in the previous frame
 
+  // precalculate the width of skip cone
   int skip_min = skip_cone / input_scan.angle_increment;
   int skip_max = filtered_scan.ranges.size() - skip_min;
 
   for (unsigned int i = 0; i < filtered_scan.ranges.size(); i++) {
+    // skip the points in the front
     if (i > skip_min && i < skip_max) {
       continue;
     }
+
     proccess_point(filtered_scan, last_valid, delete_big, last_dist,
-                       island_points, num_filtered_points, i, 1);
+                   island_points, num_filtered_points, i, 1);
   }
 
   ROS_DEBUG("Island filter filtered %u points.", num_filtered_points);
