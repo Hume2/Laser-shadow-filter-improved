@@ -15,8 +15,8 @@ nifti_laser_filtering:
         type: nifti_laser_filtering/SelfEdgeLaserFilter
         params:
             max_edge_distance: 0.5  # metres
-            min_filter_angle: 2.400  # radians 1.466
-            max_filter_angle: 2.932  # radians 2.932
+            min_filter_angle: 2.450  # radians 1.466
+            max_filter_angle: 2.850  # radians 2.932
             delta_threshold: 0.01  # metres
             min_valid_distance: 0.2 # metres
             after_trail_points: 10
