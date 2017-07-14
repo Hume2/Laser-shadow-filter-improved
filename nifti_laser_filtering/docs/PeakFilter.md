@@ -22,3 +22,7 @@ The output is a laser data set with flattered peaks.
             max_filter_angle: 0.524  # radians
             passes: 3 
 ```
+
+## Geometry
+*A*, *B* and *C* are three neighbour measured points. When the angle marked as question mark is too sharp, it changes the point *B* to *B'*. The peak might be convex or concave, as shown bellow.
+[geometry showcase](svg/PeakFilter.svg)

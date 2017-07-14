@@ -29,4 +29,8 @@ The output is the filtered laser scan data. It still doesn't remove everything, 
             min_valid_distance: 0.2 # metres
             after_trail_points: 10
             use_vertical_filtering: True
+
+## Geometry
+*A*, *B* and *C* are three neighbour measured points. When the angle marked as question mark is inside the given bounds, it's considered to be an edge. After that it removes the shadow trail.
+[geometry showcase](svg/SelfEdgeLaserFilter.svg)
 ```

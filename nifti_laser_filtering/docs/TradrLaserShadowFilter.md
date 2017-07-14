@@ -22,3 +22,7 @@ The output is the filtered laser data. It should also pass some filters to remov
             min_angle_far: 0.10  # radians
             far_distance_threshold: 0.7  # meters
 ```
+
+## Geometry
+*A* and *B* are two measured points. When the angle marked as question mark is too sharp, the point *A* is considered to be a shadow.
+[geometry showcase](svg/TradrLaserShadowFilter.svg)
