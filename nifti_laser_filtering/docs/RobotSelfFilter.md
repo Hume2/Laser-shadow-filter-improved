@@ -19,3 +19,20 @@ This is a filter that removes the robot itself from the laser scan.
 The input is the data from a laser scan. Shadows should be already filtered, because it might be impossible to filter the shadows after applying this filter.
 
 The output is the filtered data. The remaining glitches can be filtered using the [Island Filter](IslandFilter.md).
+
+## Example Configuration
+```
+    -   name: RobotSelfFilter
+        type: robot_self_filter/RobotSelfFilter
+        params:
+            robot_frame: 'base_link'
+            min_distance: 0.0
+            max_distance: 2.0
+            inflation_scale: 1.15
+            inflation_padding: 0.01
+            robot_description_param: '/nifti_robot_description'
+            wait_for_transform: 0.5
+            compute_bounding_sphere: True
+            compute_bounding_box: True
+            compute_debug_bounding_box: False
+```

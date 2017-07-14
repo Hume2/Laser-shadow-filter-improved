@@ -29,3 +29,15 @@ This results in setting the `max_count` to a quite big number, because some fake
 Setting the parameters for the [Island Filter](IslandFilter.md) is always finding a good compromise. Setting the parameters to low values results in more fake islands to be left in the data, while the high values result in reducing the robot's perception for close objects rapidly. By default the `max_count` is set to 8 and the `max_big_rise` to 8. This makes the scans very clean and there are still many real points left near the robot.
 
 Also note that other filters might scatter the real data to small islands, so it also depends on the settings of the other used filters.
+
+## Example Configuration
+```
+    -   name: IslandFilter
+        type: nifti_laser_filtering/IslandFilter
+        params:
+            max_distance: 0.8 # metres
+            min_wall_distance: 0.05 # metres
+            skip_cone: 1.9 # radians
+            max_count: 8
+            max_big_rise: 8
+```

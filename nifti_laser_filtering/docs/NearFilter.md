@@ -10,3 +10,9 @@ The points close to the robot appear to be closer than they really are. This fil
 The input is the raw data from the laser scanner.
 
 The output is the data where the deformation is eliminated.
+
+## Example Configuration
+```
+    -   name: NearFilter
+        type: nifti_laser_filtering/NearFilter
+```

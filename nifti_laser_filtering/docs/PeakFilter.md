@@ -13,3 +13,12 @@ This filter is not used by default.
 The input can be any data set from laser scanner in any phase of filtration.
 
 The output is a laser data set with flattered peaks.
+
+## Example Configuration
+```
+    -   name: PeakFilter
+        type: nifti_laser_filtering/PeakFilter
+        params:
+            max_filter_angle: 0.524  # radians
+            passes: 3 
+```

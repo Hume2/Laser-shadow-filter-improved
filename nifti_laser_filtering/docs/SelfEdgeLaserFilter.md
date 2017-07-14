@@ -16,3 +16,17 @@ This filter removes the shadows that the robot casts. It is expected that the ro
 The input is the data from a laser scan. It's advertised to use the [Tradr Shadow Filter](TradrShadowFilter.md) first.
 
 The output is the filtered laser scan data. It still doesn't remove everything, it's advertised to use also the *Island Filter*.
+
+## Example Configuration
+```
+    -   name: SelfEdgeLaserFilter
+        type: nifti_laser_filtering/SelfEdgeLaserFilter
+        params:
+            max_edge_distance: 0.5  # metres
+            min_filter_angle: 2.450  # radians
+            max_filter_angle: 2.850  # radians
+            delta_threshold: 0.01  # metres
+            min_valid_distance: 0.2 # metres
+            after_trail_points: 10
+            use_vertical_filtering: True
+```
