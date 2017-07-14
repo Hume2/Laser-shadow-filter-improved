@@ -1,3 +1,5 @@
+[back to index](index.md)
+
 # Robot Self Filter
 This is a filter that removes the robot itself from the laser scan.
 
@@ -16,4 +18,4 @@ This is a filter that removes the robot itself from the laser scan.
 ## Input and Output
 The input is the data from a laser scan. Shadows should be already filtered, because it might be impossible to filter the shadows after applying this filter.
 
-The output is the filtered data. The remaining glitches can be filtered using the *Island Filter*.
+The output is the filtered data. The remaining glitches can be filtered using the [Island Filter](IslandFilter.md).

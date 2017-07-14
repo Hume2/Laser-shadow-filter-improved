@@ -1,3 +1,5 @@
+[back to index](index.md)
+
 # Peak Filter
 Peak filter is a very simplified noise blanker. It looks for sharp peaks, both convex and concave, and flatterns them. It can't harm the real data, because real peaks are never so sharp and even if they were, it would flattern only one point, while the rest would stay. When the sharp peak is detected, it puts an average value of the neighbour points instead. The *Peak Filter* filters only when there are three neighbour points, all with a valid value.
 

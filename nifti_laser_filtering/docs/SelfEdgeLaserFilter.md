@@ -1,3 +1,5 @@
+[back to index](index.md)
+
 # Self Edge Laser Filter
 This filter removes the shadows that the robot casts. It is expected that the robot has no sharp edges. It always finds an edge and tries to remove the trail as is possible.
 
@@ -11,6 +13,6 @@ This filter removes the shadows that the robot casts. It is expected that the ro
 * `use_vertical_filtering` (True or False) - This option allows to consider the data from previous frames. It filters a bit more points when it's on. Vertical filtering makes the same as the normal (horizontal) filtering, but vertically.
 
 ## Input and Output
-The input is the data from a laser scan. It's advertised to use the *Tradr Shadow Filter* first.
+The input is the data from a laser scan. It's advertised to use the [Tradr Shadow Filter](TradrShadowFilter.md) first.
 
 The output is the filtered laser scan data. It still doesn't remove everything, it's advertised to use also the *Island Filter*.

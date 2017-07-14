@@ -1,3 +1,5 @@
+[back to index](index.md)
+
 # Island Filter
 
 This filter cuts off all lonely island, those are probably left from the previous filters. It always passes through the island, looks whether the island is small enough and then it might get deleted. An island is an isolated cluster of data that is not connected to the neighbour data. There are no valid data outside the island, or the data outside the island is much farther that the island. There is also a *skip cone* in front of the robot, where no islands can be filtered.
@@ -24,6 +26,6 @@ There are two types of islands, the small ones and the big ones. The point count
 This results in setting the `max_count` to a quite big number, because some fake islands are really big. This is a problem, because it reduces the robot's perception rapidly for the close objects. Imagine that there is a vertical pole near the robot. When the `max_count` is set to a big value, the robot can never see that pole, because it is considered to be a fake island in all of the scans. However, the fake islands are usually just a few frames thick. Therefore the filter always compares the data with the data from the previous frame. When there is a big island and there was a big island even in the frame before, it's considered to be a real island. And when there were just several points (less than `max_big_rise`), it's considered to be a fake. The `max_big_rise` says, how many points there can be before the big island to be filtered.
 
 ## Setting the parameters
-Setting the parameters for the *Island Filter* is always finding a good compromise. Setting the parameters to low values results in more fake islands to be left in the data, while the high values result in reducing the robot's perception for close objects rapidly. By default the `max_count` is set to 8 and the `max_big_rise` to 8. This makes the scans very clean and there are still many real points left near the robot.
+Setting the parameters for the [Island Filter](IslandFilter.md) is always finding a good compromise. Setting the parameters to low values results in more fake islands to be left in the data, while the high values result in reducing the robot's perception for close objects rapidly. By default the `max_count` is set to 8 and the `max_big_rise` to 8. This makes the scans very clean and there are still many real points left near the robot.
 
 Also note that other filters might scatter the real data to small islands, so it also depends on the settings of the other used filters.
