@@ -1,7 +1,7 @@
 [back to index](index.md)
 
 # Self Edge Laser Filter
-This filter removes the shadows that the robot casts. It is expected that the robot has no sharp edges. It always finds an edge and tries to remove the trail as is possible.
+This filter removes the shadows those the robot casts. It is expected that the robot has no sharp edges. It always finds an edge and tries to remove the trail as is possible.
 
 ## Parameters
 * `max_edge_distance` (in metres) - The maximum distance of an edge to be proccessed. Note that this is only the distance of the edge. When the shadow continues behind this value, it's still filtered.
@@ -15,7 +15,7 @@ This filter removes the shadows that the robot casts. It is expected that the ro
 ## Input and Output
 The input is the data from a laser scan. It's advertised to use the [Tradr Shadow Filter](TradrShadowFilter.md) first.
 
-The output is the filtered laser scan data. It still doesn't remove everything, it's advertised to use also the *Island Filter*.
+The output is the filtered laser scan data. It still doesn't remove everything, it's advertised to use also the [Island Filter](IslandFilter.md).
 
 ## Example Configuration
 ```yaml
@@ -32,6 +32,6 @@ The output is the filtered laser scan data. It still doesn't remove everything, 
 ```
 
 ## Geometry
-*A*, *B* and *C* are three neighbour measured points. When the angle marked as question mark is inside the given bounds, it's considered to be an edge. After that it removes the shadow trail.
+*A*, *B* and *C* are three neighbour measured points. When the angle marked as question mark is inside the given bounds, it's considered to be an edge. After that it removes the shadow trail. It's expected the the shadow trail is a line.
 
 ![geometry showcase](geometry/SelfEdgeLaserFilter.svg.png)

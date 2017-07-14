@@ -1,7 +1,7 @@
 [back to index](index.md)
 
 # Tradr Laser Shadow Filter
-This filter removes laser shadows from the scan. When the distances from laser data ascend rapidly, it's most likely a laser shadow. There are two angles, one is applied for far objects and the other is applied for the close objects on the sides of the robot.
+This filter removes laser shadows from the scan. When the distances from laser data ascend rapidly, it's most likely a laser shadow. There are two angles, one is applied for the far objects and the other is applied for the close objects on the sides of the robot.
 
 ## Parameters
 * `min_angle_close` (in radians) - The minium ascend angle of the shadow. This one is applied for the close objects on the sides of the robot.
