@@ -12,3 +12,12 @@ Althrough this filter removes the major part of fake measurements from the data 
 * [Robot Self Filter](RobotSelfFilter.md) - This filter cuts off the robot's body from the data set, because the robot can also see itself.
 * [Self Edge Laser Filter](SelfEdgeLaserFilter.md) - The robot's own body also casts shadows, so this filter removes them.
 * [Tradr Laser Shadow Filter](TradrLaserShadowFilter.md) - This is a simple filter that removes laser shadows, but doesn't work well for close shadows.
+
+## Showcases
+Before filtering:
+
+![picture](showcases/raw.png)
+
+After filtering:
+
+![picture](showcases/filtered.png)

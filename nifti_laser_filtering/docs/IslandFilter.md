@@ -41,3 +41,12 @@ Also note that other filters might scatter the real data to small islands, so it
             max_count: 8
             max_big_rise: 8
 ```
+
+## Showcases
+Before filtering:
+
+![picture](showcases/islands.png)
+
+After filtering:
+
+![picture](showcases/filtered.png)
