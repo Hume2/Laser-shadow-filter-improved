@@ -18,7 +18,7 @@ The input is the data from a laser scan. It's advertised to use the [Tradr Shado
 The output is the filtered laser scan data. It still doesn't remove everything, it's advertised to use also the *Island Filter*.
 
 ## Example Configuration
-```
+```yaml
     -   name: SelfEdgeLaserFilter
         type: nifti_laser_filtering/SelfEdgeLaserFilter
         params:

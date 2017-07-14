@@ -12,3 +12,13 @@ This filter removes laser shadows from the scan. When the distances from laser d
 The input is the data from a laser scanner. It should already pass through the [Near Filter](NearFilter.md).
 
 The output is the filtered laser data. It should also pass some filters to remove the robot itself from the scans.
+
+## Example Configuration
+```yaml
+    -   name: TradrLaserShadowFilter
+        type: nifti_laser_filtering/TradrLaserShadowFilter
+        params:
+            min_angle_close: 0.10  # radians
+            min_angle_far: 0.10  # radians
+            far_distance_threshold: 0.7  # meters
+```

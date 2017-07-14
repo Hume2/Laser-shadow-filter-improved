@@ -21,7 +21,7 @@ The input is the data from a laser scan. Shadows should be already filtered, bec
 The output is the filtered data. The remaining glitches can be filtered using the [Island Filter](IslandFilter.md).
 
 ## Example Configuration
-```
+```yaml
     -   name: RobotSelfFilter
         type: robot_self_filter/RobotSelfFilter
         params:

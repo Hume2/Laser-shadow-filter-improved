@@ -15,7 +15,7 @@ The input can be any data set from laser scanner in any phase of filtration.
 The output is a laser data set with flattered peaks.
 
 ## Example Configuration
-```
+```yaml
     -   name: PeakFilter
         type: nifti_laser_filtering/PeakFilter
         params:

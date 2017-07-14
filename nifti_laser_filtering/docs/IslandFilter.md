@@ -31,7 +31,7 @@ Setting the parameters for the [Island Filter](IslandFilter.md) is always findin
 Also note that other filters might scatter the real data to small islands, so it also depends on the settings of the other used filters.
 
 ## Example Configuration
-```
+```yaml
     -   name: IslandFilter
         type: nifti_laser_filtering/IslandFilter
         params:

@@ -12,7 +12,7 @@ The input is the raw data from the laser scanner.
 The output is the data where the deformation is eliminated.
 
 ## Example Configuration
-```
+```yaml
     -   name: NearFilter
         type: nifti_laser_filtering/NearFilter
 ```
