@@ -32,6 +32,6 @@ The output is the filtered laser scan data. It still doesn't remove everything, 
 ```
 
 ## Geometry
-*A*, *B* and *C* are three neighbour measured points. When the angle marked as question mark is inside the given bounds, it's considered to be an edge. After that it removes the shadow trail. It's expected the the shadow trail is a line.
+*A*, *B* and *C* are three neighbour measured points. When the angle marked as question mark is inside the given bounds, it's considered to be an edge. After that it removes the shadow trail. It's expected that the shadow trail is a line.
 
 ![geometry showcase](geometry/SelfEdgeLaserFilter.svg.png)
