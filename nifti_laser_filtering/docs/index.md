@@ -1,10 +1,10 @@
-== Nifti Laser Filter Documentation ==
+# Nifti Laser Filter Documentation
 
 This is a set of ROS filters used for filtering the laser scan input. It filters the laser shadows, the robot itself and some other things those aren't the real part of the environment. The input is simply the data from the laser scanner and the output is the filtered data.
 
 Althrough this filter removes the major part of fake measurements from the data set, some minor glitches might still occur. However, they appear always only once on the given position, so they shouldn't make any problems for evaluating the data set.
 
-``This set of filter consists of these filters:``
+**This set of filter consists of these filters:**
 
 * Island Filter - It's a filter that cuts off the lonely islands of data, those are probably fake.
 * Near Filter - The close points appear to be closer than they really are, so this filter fixes that.
