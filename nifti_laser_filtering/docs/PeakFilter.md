@@ -25,4 +25,5 @@ The output is a laser data set with flattered peaks.
 
 ## Geometry
 *A*, *B* and *C* are three neighbour measured points. When the angle marked as question mark is too sharp, it changes the point *B* to *B'*. The peak might be convex or concave, as shown bellow.
+
 ![geometry showcase](geometry/PeakFilter.svg.png)

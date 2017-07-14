@@ -25,4 +25,5 @@ The output is the filtered laser data. It should also pass some filters to remov
 
 ## Geometry
 *A* and *B* are two measured points. When the angle marked as question mark is too sharp, the point *A* is considered to be a shadow.
+
 ![geometry showcase](geometry/TradrLaserShadowFilter.svg.png)
