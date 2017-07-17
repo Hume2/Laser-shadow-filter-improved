@@ -13,6 +13,9 @@ Althrough this filter removes the major part of fake measurements from the data 
 * [Self Edge Laser Filter](SelfEdgeLaserFilter.md) - The robot's own body also casts shadows, so this filter removes them.
 * [Tradr Laser Shadow Filter](TradrLaserShadowFilter.md) - This is a simple filter that removes laser shadows, but doesn't work well for close shadows.
 
+## Configuration
+The configuration file is in [nifti_laser_filtering/config/nifti_laser_filters.yaml](../nifti_laser_filtering/config/nifti_laser_filters.yaml). There are parameters for each used filter. How to set these parameters is described in the documentation files for each filter extra.
+
 ## Showcases
 Before filtering:
 
